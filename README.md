@@ -1,74 +1,20 @@
 # poc-infracao
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este projeto foi desenvolvido seguindo os princípios da Arquitetura Hexagonal (também conhecida como Arquitetura de Portas e Adaptadores). A ideia principal dessa arquitetura é permitir que a lógica de negócio seja isolada e independente de detalhes técnicos, como frameworks, interfaces de usuário ou infraestruturas externas. O foco é na separação de responsabilidades e facilidade para troca de componentes externos sem impactar o núcleo do sistema.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+A arquitetura é dividida em três pilares principais, representados pelos packages: core, inbound e outbound.
 
-## Running the application in dev mode
+Estrutura do Projeto
 
-You can run your application in dev mode that enables live coding using:
+# 1. Core
+O package core é o coração da aplicação. Ele contém toda a lógica de negócio, as regras de domínio e as entidades principais do sistema. O objetivo é garantir que essa camada seja completamente agnóstica a quaisquer detalhes de implementação externa, tornando-a altamente testável e reutilizável.
 
-```shell script
-./mvnw compile quarkus:dev
-```
+# 2. Inbound
+O package inbound é responsável por lidar com todas as interações que entram na aplicação. Ele funciona como uma "porta de entrada" e pode conter controladores, listeners, gateways ou quaisquer componentes que recebem dados de fontes externas.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+# 3. Outbound
+O package outbound lida com todas as interações com sistemas externos. Ele atua como uma "porta de saída", buscando ou enviando informações para fora do sistema, como bancos de dados, sistemas de mensageria, APIs externas, entre outros.
 
-## Packaging and running the application
+Aqui estão implementadas as interfaces definidas no core, de modo que os detalhes da infraestrutura e de persistência fiquem isolados. Dessa forma, se algum componente externo precisar ser substituído (ex: trocar o banco de dados ou o sistema de mensageria), o impacto no core será mínimo.
 
-The application can be packaged using:
 
-```shell script
-./mvnw package
-```
-
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/poc-infracao-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- RESTEasy Classic's REST Client ([guide](https://quarkus.io/guides/resteasy-client)): Call REST services
-- RESTEasy Classic ([guide](https://quarkus.io/guides/resteasy)): REST endpoint framework implementing Jakarta REST and more
-- RESTEasy Classic's REST Client Jackson ([guide](https://quarkus.io/guides/resteasy-client)): Jackson serialization support for the REST Client
-
-## Provided Code
-
-### RESTEasy Client
-
-Invoke different services through REST with JSON
-
-[Related guide section...](https://quarkus.io/guides/resteasy-client)
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
